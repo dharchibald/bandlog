@@ -24,7 +24,6 @@ class Outline(models.Model):
   members = models.ManyToManyField(
     Artist,
     through='Membership',
-    symmetrical=False,
     related_name='bands',
   )
   related = models.ManyToManyField('self')
@@ -81,6 +80,18 @@ class Membership(models.Model):
   )
 
 
+class Genre(models.Model):
+  title = models.CharField(max_length=31)
+  desc = models.TextField(max_length=2047, blank=True)
+  subgenres = models.ManyToManyField(
+    'Genre',
+    symmetrical=False,
+    null=True,
+    blank=True,
+    related_name='supergenres',
+  )
+
+
 class Album(models.Model):
   SINGLE = 'SG'
   EP = 'EP'
@@ -96,6 +107,11 @@ class Album(models.Model):
     Artist,
     blank=True,
     related_name='credited_on',
+  )
+  genres = models.ManyToManyField(
+    Genres,
+    blank=True,
+    related_name='albums',
   )
   release_date = models.DateField(
     auto_now=False, 
@@ -137,18 +153,11 @@ class Song(models.Model):
     decimal_places=2,
     null=True,
   )
-  details = models.OneToOneField(
-    'SongExtend',
-    on_delete=models.SET_NULL,
-    null=True,
-    blank=True,
-    related_name='base',
-  )
+  sample = models.URLField(max_length=255, blank=True)
+  lyrics = models.TextField(max_length=8191, blank=True)
 
   def __str__(self):
     return self.title
 
 
-class SongExtend(models.Model):
-  sample = models.URLField(max_length=255, blank=True)
-  lyrics = models.TextField(max_length=8191, blank=True)
+
