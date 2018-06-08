@@ -1,7 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
+# Template for individual artists - represents an artist by name.
+# If an artist is further defined, then the details will be stored
+# in the artist's Outline.
 class Artist(models.Model):
   name = models.CharField(max_length=127, db_index=True)
   outline = models.OneToOneField(
@@ -19,31 +23,24 @@ class Artist(models.Model):
     return outline
 
 
+# Template for bands/individuals that hold more info than a name.
 class Outline(models.Model):
   is_band = models.BooleanField()
   members = models.ManyToManyField(
     Artist,
     through='Membership',
+    blank=True,
     related_name='bands',
   )
-  related = models.ManyToManyField('self')
-  from_date = models.DateField(
-    auto_now=False,
-    auto_now_add=False,
-    null=True,
-    blank=True,
-  )
-  to_date = models.DateField(
-    auto_now=False,
-    auto_now_add=False,
-    null=True,
-    blank=True,
-  )
-  discog = models.ManyToManyField('Album')
+  related = models.ManyToManyField('self', blank=True)
+  from_date = models.DateField(null=True, blank=True)
+  to_date = models.DateField(null=True, blank=True)
+  discog = models.ManyToManyField('Album', blank=True)
   avg_rating = models.DecimalField(
     max_digits=3,
     decimal_places=2,
     null=True,
+    blank=True,
   )
   country = models.CharField(max_length=31, blank=True)
   bio = models.TextField(max_length=2047, blank=True)
@@ -53,6 +50,8 @@ class Outline(models.Model):
     return self.is_band
 
 
+# Link between band members and the band.
+# Also tracks how long each member was a part of the band.
 class Membership(models.Model):
   member = models.ForeignKey(
     Artist,
@@ -66,20 +65,11 @@ class Membership(models.Model):
     null=True,
     related_name='member_memberships',
   )
-  from_date = models.DateField(
-    auto_now=False,
-    auto_now_add=False,
-    null=True,
-    blank=True,
-  )
-  to_date = models.DateField(
-    auto_now=False,
-    auto_now_add=False,
-    null=True,
-    blank=True,
-  )
+  from_date = models.DateField(null=True, blank=True)
+  to_date = models.DateField(null=True, blank=True)
 
 
+# Template for genres an album may belong to.
 class Genre(models.Model):
   title = models.CharField(max_length=31)
   desc = models.TextField(max_length=2047, blank=True)
@@ -92,6 +82,12 @@ class Genre(models.Model):
   )
 
 
+class Tag(models.Model):
+  title = models.CharField(max_length=31)
+  desc = models.TextField(max_length=2047, blank=True)
+
+
+# Template for an album release from an artist.
 class Album(models.Model):
   SINGLE = 'SG'
   EP = 'EP'
@@ -113,11 +109,7 @@ class Album(models.Model):
     blank=True,
     related_name='albums',
   )
-  release_date = models.DateField(
-    auto_now=False, 
-    auto_now_add=False,
-    blank=True,
-  )
+  release_date = models.DateField(blank=True)
   release_type = models.CharField(
     max_length=2,
     choices=TYPE_CHOICES,
@@ -138,6 +130,7 @@ class Album(models.Model):
     return self.release_type
 
 
+# Template for the songs that make up releases.
 class Song(models.Model):
   title = models.CharField(max_length=127)
   album = models.ForeignKey(
@@ -160,4 +153,64 @@ class Song(models.Model):
     return self.title
 
 
+class UserProfile(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  friends = models.ManyToManyField(
+    'self',
+    symmetrical=True,
+    blank=True,
+  )
+  bio = models.TextField(blank=True)
+  favorites = models.ManyToManyField(Artist, blank=True)
+  albums = models.ManyToManyField(
+    Album,
+    through='UserAlbum',
+    blank=True,
+  )
 
+# Relationship between a user and an album
+class UserAlbum(models.Model):
+  user = models.ForeignKey(
+    UserProfile,
+    on_delete=models.SET_NULL,
+    null=True,
+  )
+  album = models.ForeignKey(
+    Album,
+    on_delete=models.SET_NULL,
+    null=True,
+  )
+  listens = PositiveIntegerField(default=0)
+  last_listen = DateField(blank=True)
+  rating = PositiveIntegerField(null=True, blank=True)
+
+
+# Relationship between a user and a song
+  user = models.ForeignKey(
+    User,
+    on_delete=models.SET_NULL,
+    null=True,
+  )
+  song = models.ForeignKey(
+    Song,
+    on_delete=models.SET_NULL,
+    null=True,
+  )
+  listens = PositiveIntegerField(default=0)
+  last_listen = DateField(blank=true)
+  rating = PositiveSmallIntegerField(null=True, blank=true)
+
+
+# Template for a user's post or comment
+class UserPost(models.Model):
+  user = models.ForeignKey(
+    UserProfile,
+    on_delete=models.SET_NULL,
+    null=True,
+    related_name='posts',
+  )
+  post = models.TextField(),
+  date = models.DateTimeField(default=timezone.now)
+
+  def __str__(self):
+    return self.post
