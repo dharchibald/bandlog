@@ -44,6 +44,7 @@ class Outline(models.Model):
   country = models.CharField(max_length=31, blank=True)
   bio = models.TextField(max_length=2047, blank=True)
   img_path = models.URLField(max_length=255, blank=True)
+  comments = GenericRelation('Comment')
 
   def is_band(self):
     return self.is_band
@@ -64,10 +65,6 @@ class Membership(models.Model):
   )
   from_date = models.DateField(blank=True)
   to_date = models.DateField(blank=True)
-
-
-class Label(models.Model):
-  
 
 
 # Template for genres an album may belong to.
@@ -118,9 +115,17 @@ class Album(models.Model):
     decimal_places=2,
     null=True,
   )
+  ratings = GenericRelation('UserRating')
+  comments = GenericRelation('UserPost')
 
   def __str__(self):
     return self.title
+
+  @property
+  def calculate_rating(self):
+    sum = ratings.objects.all().aggregate(Sum('rating'))
+    count = ratings.objects.count()
+    return (sum/count)
 
 
 # Template for the songs that make up releases.
@@ -136,6 +141,7 @@ class Song(models.Model):
   track_num = models.PositiveSmallIntegerField(null=True, blank=True)
   sample = models.URLField(max_length=255, blank=True)
   lyrics = models.TextField(max_length=8191, blank=True)
+  comments = GenericRelation('UserPost')
 
   def __str__(self):
     return self.title
@@ -144,9 +150,9 @@ class Song(models.Model):
 # Page dedicated to discussions between users
 class Discussion(models.Model):
   topic = models.CharField(max_length=127)
-  orig_post = models.TextField(max_length=4095, blank=True)
   create_time = models.DateTimeField(auto_now_add=True)
   last_update = models.DateTimeField(auto_now=True)
+  posts = GenericRelation('UserPost')
 
 
 # Profile template for individual users
@@ -166,21 +172,22 @@ class UserProfile(models.Model):
   )
 
 
-# User listens to an album
-class AlbumListen(models.Model):
+# User listens to an album/song
+class UserListen(models.Model):
   user = models.ForeignKey(
     UserProfile,
     on_delete=models.CASCADE,
     related_name='albums_heard',
   )
-  listens = models.PositiveIntegerField(default=0)
-  last_listen
-  album = models.ForeignKey(
-    Album,
+  content_type = models.ForeignKey(
+    ContentType,
     on_delete=models.CASCADE,
     related_name='listeners',
   )
-  last_listen = models.DateField()
+  object_id = models.PositiveIntegerField()
+  content_object = GenericForeignKey()
+  listens = models.PositiveIntegerField(default=0)
+  last_update = models.DateField()
 
 
 # User rating for an album/song
@@ -190,8 +197,6 @@ class UserRating(models.Model):
     on_delete=models.CASCADE,
     related_name='rated',
   )
-  rating = models.PositiveIntegerField()
-  last_update = models.DateField(auto_now=true)
   content_type = models.ForeignKey(
     ContentType,
     on_delete=models.CASCADE,
@@ -199,9 +204,11 @@ class UserRating(models.Model):
   )
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
+  rating = models.PositiveIntegerField()
+  last_update = models.DateField(auto_now=true)
 
 
-# User vote for an album/song genre or tag
+# User votes for a genre applied to an album/song
 class GenreVote(models.Model):
   user = models.ForeignKey(
     UserProfile,
@@ -218,12 +225,31 @@ class GenreVote(models.Model):
   genre = models.OneToOneField(
     Genre,
     on_delete=models.CASCADE,
-    related_name='album_votes',
+    related_name='votes',
   )
   positive = models.BooleanField(default=true)
 
 
-class TagVote
+# User votes for individual tags on an album/song
+class TagVote(models.Model):
+  user = models.ForeignKey(
+    UserProfile,
+    on_delete=models.CASCADE,
+    related_name='tag_votes',
+  )
+  content_type = models.ForeignKey(
+    ContentType,
+    on_delete=models.CASCADE,
+    related_name='tag_votes',
+  )
+  object_id = models.PositiveIntegerField()
+  content_object = GenericForeignKey()
+  tag = models.OneToOneField(
+    Tag,
+    on_delete=models.CASCADE,
+    related_name='votes',
+  )
+  positive = models.BooleanField()
 
 # Template for a user's post or comment
 class UserPost(models.Model):
@@ -235,11 +261,9 @@ class UserPost(models.Model):
   )
   post = models.TextField(max_length=4095),
   date = models.DateTimeField(default=timezone.now)
-  discussion = models.ForeignKey(
-    Discussion,
-    on_delete=models.CASCADE,
-    related_name='posts',
-  )
+  content_type = models.ForeignKey(ContentType)
+  object_id = models.PositiveIntegerField()
+  content_object = GenericForeignKey()
 
   def __str__(self):
     return self.post
