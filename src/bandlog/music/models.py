@@ -34,7 +34,11 @@ class Outline(models.Model):
   related = models.ManyToManyField('self', blank=True)
   from_date = models.DateField(blank=True)
   to_date = models.DateField(blank=True)
-  discog = models.ManyToManyField('Album', blank=True)
+  discog = models.ManyToManyField(
+    'Album', 
+    blank=True,
+    related_name='artists',
+  )
   avg_rating = models.DecimalField(
     max_digits=3,
     decimal_places=2,
@@ -123,9 +127,11 @@ class Album(models.Model):
 
   @property
   def calculate_rating(self):
-    sum = ratings.objects.all().aggregate(Sum('rating'))
-    count = ratings.objects.count()
-    return (sum/count)
+    return UserRating.objects.filter(content_object=self).aggregate(Avg('rating'))
+
+  def update_rating(self)
+    self.avg_rating = self.calculate_rating()
+    self.save()
 
 
 # Template for the songs that make up releases.
@@ -141,18 +147,38 @@ class Song(models.Model):
   track_num = models.PositiveSmallIntegerField(null=True, blank=True)
   sample = models.URLField(max_length=255, blank=True)
   lyrics = models.TextField(max_length=8191, blank=True)
+  avg_rating = models.DecimalField(
+    max_digits=3,
+    decimal_places=2,
+    null=True,
+    blank=True,
+  )
+  ratings = GenericRelation('UserRating')
   comments = GenericRelation('UserPost')
+
+  class Meta:
+    unique_together = ('album', 'disc_num', 'track_num',)
 
   def __str__(self):
     return self.title
+
+  def calculate_rating(self):
+    return UserRating.objects.filter(content_object=self).aggregate(Avg('rating'))
+
+  def update_rating(self):
+    self.avg_rating = self.calculate_rating()
+    self.save()
 
 
 # Page dedicated to discussions between users
 class Discussion(models.Model):
   topic = models.CharField(max_length=127)
-  create_time = models.DateTimeField(auto_now_add=True)
-  last_update = models.DateTimeField(auto_now=True)
+  date = models.DateTimeField(auto_now_add=True)
   posts = GenericRelation('UserPost')
+
+  @property
+  def last_update(self):
+    return posts.latest().date
 
 
 # Profile template for individual users
@@ -187,7 +213,7 @@ class UserListen(models.Model):
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
   listens = models.PositiveIntegerField(default=0)
-  last_update = models.DateField()
+  last_update = models.DateField(auto_now=true)
 
 
 # User rating for an album/song
@@ -206,6 +232,10 @@ class UserRating(models.Model):
   content_object = GenericForeignKey()
   rating = models.PositiveIntegerField()
   last_update = models.DateField(auto_now=true)
+
+  def save(self, *args, **kwargs):
+    self.last_update = now()
+    super(UserRating, self).save(*args, **kwargs)
 
 
 # User votes for a genre applied to an album/song
