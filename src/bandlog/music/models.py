@@ -1,6 +1,8 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
@@ -35,7 +37,7 @@ class Outline(models.Model):
   from_date = models.DateField(blank=True)
   to_date = models.DateField(blank=True)
   discog = models.ManyToManyField(
-    'Album', 
+    'Album',
     blank=True,
     related_name='artists',
   )
@@ -48,7 +50,7 @@ class Outline(models.Model):
   country = models.CharField(max_length=31, blank=True)
   bio = models.TextField(max_length=2047, blank=True)
   img_path = models.URLField(max_length=255, blank=True)
-  comments = GenericRelation('Comment')
+  comments = GenericRelation('UserPost')
 
   def is_band(self):
     return self.is_band
@@ -129,7 +131,7 @@ class Album(models.Model):
   def calculate_rating(self):
     return UserRating.objects.filter(content_object=self).aggregate(Avg('rating'))
 
-  def update_rating(self)
+  def update_rating(self):
     self.avg_rating = self.calculate_rating()
     self.save()
 
@@ -191,11 +193,6 @@ class UserProfile(models.Model):
   )
   bio = models.TextField(blank=True)
   favorites = models.ManyToManyField(Artist, blank=True)
-  albums = models.ManyToManyField(
-    Album,
-    through='UserAlbum',
-    blank=True,
-  )
 
 
 # User listens to an album/song
@@ -203,7 +200,7 @@ class UserListen(models.Model):
   user = models.ForeignKey(
     UserProfile,
     on_delete=models.CASCADE,
-    related_name='albums_heard',
+    related_name='listens',
   )
   content_type = models.ForeignKey(
     ContentType,
@@ -213,7 +210,7 @@ class UserListen(models.Model):
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
   listens = models.PositiveIntegerField(default=0)
-  last_update = models.DateField(auto_now=true)
+  last_update = models.DateField(auto_now=True)
 
 
 # User rating for an album/song
@@ -221,7 +218,7 @@ class UserRating(models.Model):
   user = models.ForeignKey(
     UserProfile,
     on_delete=models.CASCADE,
-    related_name='rated',
+    related_name='ratings',
   )
   content_type = models.ForeignKey(
     ContentType,
@@ -231,7 +228,7 @@ class UserRating(models.Model):
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
   rating = models.PositiveIntegerField()
-  last_update = models.DateField(auto_now=true)
+  last_update = models.DateField(auto_now=True)
 
   def save(self, *args, **kwargs):
     self.last_update = now()
@@ -257,7 +254,7 @@ class GenreVote(models.Model):
     on_delete=models.CASCADE,
     related_name='votes',
   )
-  positive = models.BooleanField(default=true)
+  positive = models.BooleanField(default=True)
 
 
 # User votes for individual tags on an album/song
@@ -279,7 +276,7 @@ class TagVote(models.Model):
     on_delete=models.CASCADE,
     related_name='votes',
   )
-  positive = models.BooleanField()
+  positive = models.BooleanField(default=True)
 
 # Template for a user's post or comment
 class UserPost(models.Model):
@@ -289,11 +286,15 @@ class UserPost(models.Model):
     null=True,
     related_name='posts',
   )
-  post = models.TextField(max_length=4095),
-  date = models.DateTimeField(default=timezone.now)
-  content_type = models.ForeignKey(ContentType)
+  content_type = models.ForeignKey(
+    ContentType,
+    on_delete=models.CASCADE,
+    related_name='posts',
+  )
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
+  body = models.TextField(max_length=4095),
+  date = models.DateTimeField(default=timezone.now)
 
   def __str__(self):
     return self.post
