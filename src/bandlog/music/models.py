@@ -7,29 +7,15 @@ from django.contrib.contenttypes.models import ContentType
 
 # Create your models here.
 
-# Template for individual artists - represents an artist by name.
-# If an artist is further defined, then the details will be stored
-# in the artist's Outline.
+# Template for a music artist.
 class Artist(models.Model):
-  name = models.CharField(max_length=127, db_index=True)
-  outline = models.OneToOneField(
-    'Outline',
-    on_delete=models.SET_NULL,
-    null=True,
-    blank=True,
-    related_name='base',
-  )
-
-  def __str__(self):
-    return name
-
-
-# Template for bands/individuals that hold more info than a name.
-class Outline(models.Model):
+  last_name = models.CharField(max_length=127, db_index=True)
+  first_name = models.CharField(max_length=31, blank=True)
   is_band = models.BooleanField()
   members = models.ManyToManyField(
-    Artist,
+    'self',
     through='Membership',
+    symmetrical=False,
     blank=True,
     related_name='bands',
   )
@@ -52,12 +38,15 @@ class Outline(models.Model):
   img_path = models.URLField(max_length=255, blank=True)
   comments = GenericRelation('UserPost')
 
-  def is_band(self):
-    return self.is_band
+  def __str__(self):
+    return '{0} ({1})'.format(self.id, self.last_name)
+
+  def get_absolute_url(self):
+    return reverse('artist-detail-view', args=[str(self.id)])
 
 
 # Link between band members and the band.
-# Also tracks how long each member was a part of the band.
+# Tracks how long each member was a part of the band.
 class Membership(models.Model):
   member = models.ForeignKey(
     Artist,
@@ -65,7 +54,7 @@ class Membership(models.Model):
     related_name='band_memberships',
   )
   band = models.ForeignKey(
-    Outline,
+    Artist,
     on_delete=models.CASCADE,
     related_name='member_memberships',
   )
@@ -84,11 +73,23 @@ class Genre(models.Model):
     related_name='supergenres',
   )
 
+  def __str__(self):
+    return self.title
+
+  def get_absolute_url(self):
+    return reverse('genre-detail', args=[str(self.id)])
+
 
 # Template for user-generated descriptors of albums/songs
 class Tag(models.Model):
   title = models.CharField(max_length=31)
   desc = models.TextField(max_length=2047, blank=True)
+
+  def __str__(self):
+    return self.title
+
+  def get_absolute_url(self):
+    return reverse('tag-detail', args=[str(self.id)])
 
 
 # Template for an album release from an artist.
@@ -124,8 +125,14 @@ class Album(models.Model):
   ratings = GenericRelation('UserRating')
   comments = GenericRelation('UserPost')
 
+  class Meta:
+    get_latest_by = '-release_date'
+
   def __str__(self):
     return self.title
+
+  def get_absolute_url(self):
+    return reverse('album-detail', args=[str(self.id)])
 
   @property
   def calculate_rating(self):
@@ -177,6 +184,12 @@ class Discussion(models.Model):
   topic = models.CharField(max_length=127)
   date = models.DateTimeField(auto_now_add=True)
   posts = GenericRelation('UserPost')
+
+  def __str__(self):
+    return date + " " + topic
+
+  def get_absolute_urL(self):
+    return reverse('discussion-detail', args=[str(self.id)])
 
   @property
   def last_update(self):
@@ -230,6 +243,10 @@ class UserRating(models.Model):
   rating = models.PositiveIntegerField()
   last_update = models.DateField(auto_now=True)
 
+  class Meta:
+    unique_together = (('user', 'content_type', 'object_id'),)
+    get_latest_by = 'last_update'
+
   def save(self, *args, **kwargs):
     self.last_update = now()
     super(UserRating, self).save(*args, **kwargs)
@@ -256,6 +273,9 @@ class GenreVote(models.Model):
   )
   positive = models.BooleanField(default=True)
 
+  class Meta:
+    unique_together = (('user', 'content_type', 'object_id', 'genre'),)
+
 
 # User votes for individual tags on an album/song
 class TagVote(models.Model):
@@ -277,6 +297,10 @@ class TagVote(models.Model):
     related_name='votes',
   )
   positive = models.BooleanField(default=True)
+
+  class Meta:
+    unique_together = (('user', 'content_type', 'object_id', 'tag'),)
+
 
 # Template for a user's post or comment
 class UserPost(models.Model):

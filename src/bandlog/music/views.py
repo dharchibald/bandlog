@@ -1,8 +1,13 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.http import Http404
+
+from .models import Artist
 
 # Create your views here.
 
-from django.http import HttpResponse
-
 def index(request):
-	return HttpResponse("Hello, world. You're at the polls index.")
+  return render(request, 'music/index.html', {})
+
+def artist(request, artist_id):
+  return HttpResponse("You're looking at artist %s." % artist_id)
