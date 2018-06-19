@@ -492,13 +492,15 @@ figure {
 #disc-btn {
   background: #70AE6E; 
 }
-
 #charts-btn {
   background: #00A9A5;
 }
-
 #comm-btn {
   background: #3C6E71; 
+}
+#disc-btn, #charts-btn, #comm-btn {
+  display: inline-block;
+  margin: 5px;
 }
 
 #fh5co-primary-menu > li > ul li.active > a {
