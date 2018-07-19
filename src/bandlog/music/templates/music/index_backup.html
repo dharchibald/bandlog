@@ -35,34 +35,15 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown">
-              <a id="nav-browse" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Browse
-              </a>
-              <div class="dropdown-menu" aria-labelledby="nav-browse">
-                <a class="dropdown-item" href="#">Genres</a>
-                <a class="dropdown-item" href="#">Tags</a>
-                <a class="dropdown-item" href="#">Recommended</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a id="nav-discuss" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Discuss
-              </a>
-              <div class="dropdown-menu" aria-labelledby="nav-discuss">
-                <a class="dropdown-item" href="#">Recent</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <a class="dropdown-item" href="#">Yet another action</a>
-              </div>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Profile</a>
+              <a class="nav-link js-scroll-trigger" href="#download">Download</a>
             </li>
-            <div class="navbar-search">
-              <form>
-				  <input type="search" placeholder="Search..."></input>
-              </form>
-            </div>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -74,8 +55,12 @@
         <div class="container">
           <div class="row">
             <div class="col-lg-8 mx-auto">
-              <h1 class="brand-heading">Bandlog</h1>
-              <a href="#" class="btn">Discover</a><a href="#" class="btn">Charts</a><a href="#" class="btn">Community</a>
+              <h1 class="brand-heading">Grayscale</h1>
+              <p class="intro-text">A free, responsive, one page Bootstrap theme.
+                <br>Created by Start Bootstrap.</p>
+              <a href="#about" class="btn btn-circle js-scroll-trigger">
+                <i class="fa fa-angle-double-down animated"></i>
+              </a>
             </div>
           </div>
         </div>
@@ -88,7 +73,7 @@
           <h2>Featured Artists</h2>
         </div>
         <div class="row">
-          <div id="featured-carousel" class="carousel slide carousel-fade" data-ride="carousel" style="width: 100%; margin: 0 auto">
+          <div id="featured-carousel" class="carousel slide carousel-fade" data-ride="carousel" style="width: 80%; margin: 0 auto">
               <ol class="carousel-indicators">
                 <li data-target="#featured-carousel" data-slide-to="0" class="active"></li>
                 <li data-target="#featured-carousel" data-slide-to="1"></li>
@@ -99,16 +84,13 @@
                 <div class="carousel-item active">
                 <div class="row">
                   <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/radiohead.jpg" alt="First slide">
+                    <img class="d-block w-100" src="img/img-1.jpg" alt="First slide">
                   </div>
                   <div class="col-sm-6">
                     <div class="carousel-caption">
                       <div class="row">
                         <h1>First Artist</h1>
                       </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
                       <div class="row">
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a magna ut dui lobortis malesuada ut eget eros. Mauris est enim, feugiat aliquet dolor eget, lobortis pharetra nibh. Duis consectetur eros vel massa vestibulum posuere. Vestibulum mollis ex eget mauris ultrices, vel pharetra neque iaculis. In rhoncus in enim vel posuere. Vestibulum interdum interdum vehicula. Curabitur consequat, mauris a efficitur ultricies, massa orci finibus risus, ac auctor elit leo pellentesque nulla. Pellentesque ac varius ligula, sed elementum eros. Donec sodales enim non congue dignissim. </p>
                       </div>
@@ -119,16 +101,13 @@
                 <div class="carousel-item">
                     <div class="row">
                   <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/flips.jpg" alt="Second slide">
+                    <img class="d-block w-100" src="img/img-2.jpg" alt="Second slide">
                   </div>
                   <div class="col-sm-6">
                     <div class="carousel-caption">
                       <div class="row">
                         <h1>Second Artist</h1>
                       </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
                       <div class="row">
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a magna ut dui lobortis malesuada ut eget eros. Mauris est enim, feugiat aliquet dolor eget, lobortis pharetra nibh. Duis consectetur eros vel massa vestibulum posuere. Vestibulum mollis ex eget mauris ultrices, vel pharetra neque iaculis. In rhoncus in enim vel posuere. Vestibulum interdum interdum vehicula. Curabitur consequat, mauris a efficitur ultricies, massa orci finibus risus, ac auctor elit leo pellentesque nulla. Pellentesque ac varius ligula, sed elementum eros. Donec sodales enim non congue dignissim. </p>
                       </div>
@@ -139,16 +118,13 @@
                 <div class="carousel-item">
                     <div class="row">
                   <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/img-3.jpg" alt="Third slide">
+                    <img class="d-block w-100" src="img/img-3.jpg" alt="Third slide">
                   </div>
                   <div class="col-sm-6">
                     <div class="carousel-caption">
                       <div class="row">
                         <h1>Third Artist</h1>
                       </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
                       <div class="row">
                         <p>biography blah blah blah</p>
                       </div>
@@ -159,16 +135,13 @@
               <div class="carousel-item">
                     <div class="row">
                   <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/img-4.jpg" alt="Fourth slide">
+                    <img class="d-block w-100" src="img/img-4.jpg" alt="Fourth slide">
                   </div>
                   <div class="col-sm-6">
                     <div class="carousel-caption">
                       <div class="row">
                         <h1>Fourth Artist</h1>
                       </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
                       <div class="row">
                         <p>biography blah blah blah</p>
                       </div>
@@ -193,95 +166,71 @@
     <section id="latest" class="content-section text-center">
       <div class="container">
         <div class="row">
-          <h2>
-            <a href="#">Latest Releases</a>
-          </h2>
+          <h2>Latest Releases</h2>
         </div>
         <div class="row">
-          <div id="latest-carousel" class="card-carousel carousel slide carousel-fade" data-interval="false" data-wrap="false" style="width: 100%; margin: 0">
+          <div id="latest-carousel" class="card-carousel carousel slide" data-ride="carousel" data-wrap="false" style="width: 90%; margin: 0">
             <div class="carousel-inner row w-100 mx-auto">
-              <div class="carousel-item active">
-                <div class="row">
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="http://thelimitedpress.com/wp-content/uploads/2014/05/either-or.jpg" alt="Card image 1">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="https://images-na.ssl-images-amazon.com/images/I/91VCtSQ1uwL._SL1425_.jpg" alt="Card image 2">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
+              <div class="carousel-item col-md-4 active">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-1.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
                   </div>
                 </div>
               </div>
-              <div class="carousel-item">
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-1.jpg" alt="Card image 1">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-2.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
                   </div>
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-2.jpg" alt="Card image 2">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-3.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
                   </div>
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
+                </div>
+              </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-4.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-1.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-2.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
+                  </div>
+                </div>
+              </div>
+              <div class="carousel-item col-md-4">
+                <div class="card bg-transparent">
+                  <img class="card-img-top" src="img/img-3.jpg" alt="Card image 1">
+                  <div class="card-body">
+                    <h4 class="card-title">Album Name</h4>
+                    <p class="card-text">Artist Name</p>
                   </div>
                 </div>
               </div>
