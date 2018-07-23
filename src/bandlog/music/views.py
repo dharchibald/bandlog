@@ -9,5 +9,10 @@ from .models import Artist
 def index(request):
   return render(request, 'music/index.html', {})
 
-def artist(request, artist_id):
-  return HttpResponse("You're looking at artist %s." % artist_id)
+def artist_detail(request, artist_id):
+  artist = get_object_or_404(Artist, pk=artist_id)
+
+  if artist.is_band:
+    return render(request, 'music/band.html', {'artist': artist})
+  else:
+    return render(request, 'music/artist.html', {'artist': artist})

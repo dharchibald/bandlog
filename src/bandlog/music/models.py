@@ -19,7 +19,10 @@ class Artist(models.Model):
     blank=True,
     related_name='bands',
   )
-  related = models.ManyToManyField('self', blank=True)
+  related = models.ManyToManyField(
+    'self', 
+    blank=True
+  )
   from_date = models.DateField(blank=True)
   to_date = models.DateField(blank=True)
   discog = models.ManyToManyField(
