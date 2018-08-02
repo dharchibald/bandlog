@@ -60,7 +60,7 @@
             </li>
             <div class="navbar-search">
               <form>
-				        <input type="search" placeholder="Search...">
+				 <input type="search" placeholder="Search...">
               </form>
             </div>
           </ul>
@@ -71,20 +71,60 @@
     <section id="artist-overview" class="content-section">
       <div class="container">
         <!-- Portfolio Item Heading -->
-        <h2 class="title">Artist Name</h2>
+        <div class="row">
+          <h2 class="title">{{ artist.last_name }}</h2>
+        </div>
         <!-- Portfolio Item Row -->
         <div class="row">
           
           <div class="col-md-6">
-			<div class="container">
-              <img class="img-thumbnail img-fluid center" src="http://placehold.it/750x500" alt="">
-			</div>
+            <div class="container">
+              {% if artist.img_path %}
+                <img class="img-thumbnail img-fluid center" src="{{ artist.img_path }}" alt="{{ artist.last_name }}">
+              {% else %}
+                <img class="img-thumbnail img-fluid center" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+              {% endif %}
+            </div>
           </div>
           
           <div class="col-md-6">
-            <p>July 18, 1999 - Present</p>
+            <p>
+            {% if artist.from_date %}
+              {{ artist.from_date }}
+            {% else %}
+              ?
+            {% endif %} 
+              -
+            {% if artist.to_date %}
+              {% if artist.to_date == "01/01/9999" %}
+                Present
+              {% else %}
+                {{ artist.to_date %}}
+              {% endif %}
+            {% else %}
+              ?
+            {% endif %}
+            </p>
+            
+            <h5 class="my-3">Member of</h5>
+            <ul>
+            {% for memship in artist.band_memberships %}
+              <li>
+                <a href="/artist/{{ memship.band.id }}">{{ memship.band }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+            
             <h5 class="my-3">Average Rating</h5>
-            <h6>4.13 / 5</h6>
+            <h6>
+            {% if artist.avg_rating %}
+              {{ artist.avg_rating }}
+            {% else %}
+              ?
+            {% endif %}
+             / 5
+            <h6>
+              
             <h5 class="my-3">Genres</h5>
             <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">...</a>
             <h5>Tags</h5>
@@ -96,7 +136,13 @@
       <div class="container content-div">
         <h5 class="my-3">About</h5>
         <div class="read-more expanded" data-options="70">
-          <p style="overflow: ellipsis;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc elit metus, facilisis eu odio et, tempor vehicula augue. Aenean ut diam ultricies, imperdiet metus tincidunt, condimentum ante. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam lobortis ligula eu placerat egestas. Praesent erat felis, pellentesque et tristique efficitur, euismod a leo. Sed lacinia at orci ut commodo. Mauris mattis tortor quis eros facilisis ullamcorper. Donec venenatis, nulla ac luctus condimentum, justo enim ullamcorper ligula, quis convallis nunc libero at lorem. Ut velit magna, imperdiet at mauris ut, suscipit pulvinar enim. In quis nunc ligula. Ut nisl. </p>
+          <p style="overflow: ellipsis;">
+            {% if artist.bio %}
+              {{ artist.bio }}
+            {% else %}
+              No description available.
+            {% endif %}
+          </p>
         </div>
       </div>
       
@@ -113,59 +159,94 @@
         <div class="tab-content">
           <div id="discog" class="container tab-pane fade show active">
             <table class="discog-tbl" style="width: 100%;">
+            {% if long_plays %}
               <th colspan="3">
                 Albums (Long Plays)
               </th>
+              {% for album in long_plays %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
+              {% endfor %}
+            {% endif %}
+            
+            {% if extend_plays %}
               <th colspan="3">
                 Extended Plays
               </th>
+              {% for album in extend_plays %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
+              {% endfor %}
+            {% endif %}
+              
+            {% if singles %}
+              <th colspan="3">
+                Singles
+              </th>
+              {% for album in singles %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
-              <tr>
-                <td>4</td>
-                <td>Bear</td>
-                <td>4</td>
-              </tr>
+              {% endfor %}
             </table>
           </div>
           

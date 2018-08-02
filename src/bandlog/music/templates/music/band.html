@@ -11,18 +11,19 @@
     <title>Portfolio Item - Start Bootstrap Template</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
     
     <!-- Custom styles for this template -->
-    <link href="css/grayscale.css" rel="stylesheet">
+    <link href="{% static 'css/grayscale.css' %}" rel="stylesheet">
 
   </head>
 
+  {% load static }
   <body>
 
     <!-- Navigation -->
@@ -72,22 +73,59 @@
       <div class="container">
         <!-- Portfolio Item Heading -->
         <div class="row">
-          <h2 class="title">Artist Name</h2>
+          <h2 class="title">{{ artist.last_name }}</h2>
         </div>
         <!-- Portfolio Item Row -->
         <div class="row">
           
           <div class="col-md-6">
             <div class="container">
-              <img class="img-thumbnail img-fluid center" src="http://placehold.it/750x500" alt="">
+              {% if artist.img_path %}
+                <img class="img-thumbnail img-fluid center" src="{{ artist.img_path }}" alt="{{ artist.last_name }}">
+              {% else %}
+                <img class="img-thumbnail img-fluid center" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+              {% endif %}
             </div>
           </div>
           
           <div class="col-md-6">
-            <p>July 18, 1999 - Present</p>
+            <p>
+            {% if artist.from_date %}
+              {{ artist.from_date }}
+            {% else %}
+              ?
+            {% endif %} 
+              -
+            {% if artist.to_date %}
+              {% if artist.to_date == "01/01/9999" %}
+                Present
+              {% else %}
+                {{ artist.to_date %}}
+              {% endif %}
+            {% else %}
+              ?
+            {% endif %}
+            </p>
+            
             <h5 class="my-3">Members</h5>
+            <ul>
+            {% for memship in artist.member_memberships %}
+              <li>
+                <a href="/artist/{{ memship.member.id }}">{{ memship.member }}</a>
+              </li>
+            {% endfor %}
+            </ul>
+            
             <h5 class="my-3">Average Rating</h5>
-            <h6>4.13 / 5</h6>
+            <h6>
+            {% if artist.avg_rating %}
+              {{ artist.avg_rating }}
+            {% else %}
+              ?
+            {% endif %}
+             / 5
+            <h6>
+              
             <h5 class="my-3">Genres</h5>
             <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">...</a>
             <h5>Tags</h5>
@@ -99,7 +137,13 @@
       <div class="container content-div">
         <h5 class="my-3">About</h5>
         <div class="read-more expanded" data-options="70">
-          <p style="overflow: ellipsis;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc elit metus, facilisis eu odio et, tempor vehicula augue. Aenean ut diam ultricies, imperdiet metus tincidunt, condimentum ante. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam lobortis ligula eu placerat egestas. Praesent erat felis, pellentesque et tristique efficitur, euismod a leo. Sed lacinia at orci ut commodo. Mauris mattis tortor quis eros facilisis ullamcorper. Donec venenatis, nulla ac luctus condimentum, justo enim ullamcorper ligula, quis convallis nunc libero at lorem. Ut velit magna, imperdiet at mauris ut, suscipit pulvinar enim. In quis nunc ligula. Ut nisl. </p>
+          <p style="overflow: ellipsis;">
+            {% if artist.bio %}
+              {{ artist.bio }}
+            {% else %}
+              No description available.
+            {% endif %}
+          </p>
         </div>
       </div>
       
@@ -116,59 +160,94 @@
         <div class="tab-content">
           <div id="discog" class="container tab-pane fade show active">
             <table class="discog-tbl" style="width: 100%;">
+            {% if long_plays %}
               <th colspan="3">
                 Albums (Long Plays)
               </th>
+              {% for album in long_plays %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
+              {% endfor %}
+            {% endif %}
+            
+            {% if extend_plays %}
               <th colspan="3">
                 Extended Plays
               </th>
+              {% for album in extend_plays %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
+              {% endfor %}
+            {% endif %}
+              
+            {% if singles %}
+              <th colspan="3">
+                Singles
+              </th>
+              {% for album in singles %}
               <tr>
                 <td class="img-td">
-                  <img class="img-cover img-discog mx-auto" src="http://placehold.it/750x500" alt="">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
                 </td>
                 <td>
                   <div class="row">
-                    <h6>Album Name</h6>
+                    <h6>{{ album.title }}</h6>
                   </div>
                   <div class="row">
-                    Release Date
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
                   </div>
                 </td>
-                <td>5</td>
+                <td>{{ album.avg_rating }}</td>
               </tr>
-              <tr>
-                <td>4</td>
-                <td>Bear</td>
-                <td>4</td>
-              </tr>
+              {% endfor %}
             </table>
           </div>
           
@@ -270,9 +349,9 @@
     </footer>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="js/grayscale.js"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/grayscale.js' %}"></script>
     <script>
       $('.read-more').readMore();
     </script>

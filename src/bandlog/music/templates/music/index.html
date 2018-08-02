@@ -2,29 +2,28 @@
 <html lang="en">
 
   <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="Douglas Archibald">
 
     <title>Bandlog - Discover New Music</title>
+      
+    {% load static %}
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
 
     <!-- Custom styles for this template -->
-    <link href="css/grayscale.css" rel="stylesheet">
-
+    <link href="{% static 'css/grayscale.css' %}" rel="stylesheet">
   </head>
-
+      
   <body id="page-top">
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
@@ -90,92 +89,49 @@
         <div class="row">
           <div id="featured-carousel" class="carousel slide carousel-fade" data-ride="carousel" style="width: 100%; margin: 0 auto">
               <ol class="carousel-indicators">
-                <li data-target="#featured-carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#featured-carousel" data-slide-to="1"></li>
-                <li data-target="#featured-carousel" data-slide-to="2"></li>
-                <li data-target="#featured-carousel" data-slide-to="3"></li>
+                {% for i in "x"|ljust:featured_num %}
+                <li data-target="#featured-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %} class="active" {% endif %}></li>
+                {% endfor %}
               </ol>
               <div class="carousel-inner">
-                <div class="carousel-item active">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/radiohead.jpg" alt="First slide">
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="carousel-caption">
-                      <div class="row">
-                        <h1>First Artist</h1>
-                      </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
-                      <div class="row">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a magna ut dui lobortis malesuada ut eget eros. Mauris est enim, feugiat aliquet dolor eget, lobortis pharetra nibh. Duis consectetur eros vel massa vestibulum posuere. Vestibulum mollis ex eget mauris ultrices, vel pharetra neque iaculis. In rhoncus in enim vel posuere. Vestibulum interdum interdum vehicula. Curabitur consequat, mauris a efficitur ultricies, massa orci finibus risus, ac auctor elit leo pellentesque nulla. Pellentesque ac varius ligula, sed elementum eros. Donec sodales enim non congue dignissim. </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div class="carousel-item">
+                {% for artist in featured %}
+                  {% if forloop.first %}
+                    <div class="carousel-item active">
+                  {% else %}
+                    <div class="carousel-item">
+                  {% endif %}
                     <div class="row">
-                  <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/flips.jpg" alt="Second slide">
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="carousel-caption">
-                      <div class="row">
-                        <h1>Second Artist</h1>
+                      <div class="col-sm-6">
+                        {% if artist.img_path %}
+                          <img class="d-block w-100 img-thumbnail" src="{{ artist.img_path }}" alt="{{ artist }}">
+                        {% else %}
+                          <img class="d-block w-100 img-thumbnail" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                        {% endif %}
                       </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
-                      <div class="row">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a magna ut dui lobortis malesuada ut eget eros. Mauris est enim, feugiat aliquet dolor eget, lobortis pharetra nibh. Duis consectetur eros vel massa vestibulum posuere. Vestibulum mollis ex eget mauris ultrices, vel pharetra neque iaculis. In rhoncus in enim vel posuere. Vestibulum interdum interdum vehicula. Curabitur consequat, mauris a efficitur ultricies, massa orci finibus risus, ac auctor elit leo pellentesque nulla. Pellentesque ac varius ligula, sed elementum eros. Donec sodales enim non congue dignissim. </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                  <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/img-3.jpg" alt="Third slide">
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="carousel-caption">
-                      <div class="row">
-                        <h1>Third Artist</h1>
-                      </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
-                      <div class="row">
-                        <p>biography blah blah blah</p>
+                      <div class="col-sm-6">
+                        <div class="carousel-caption">
+                          <div class="row">
+                            {% if artist.is_band %}
+                              <h1>{{ artist.last_name }}</h1>
+                            {% else %}
+                              <h1>{{ artist.first_name }} {{ artist.last_name }}</h1>
+                            {% endif %}
+                          </div>
+					                <div class="row">
+                            <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
+				                  </div>
+                          <div class="row">
+                            {% if artist.bio %}
+                              <p>{{ artist.bio }}</p>
+                            {% else %}
+                              <p>Description not available.</p>
+                            {% endif %}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                </div>
-              <div class="carousel-item">
-                    <div class="row">
-                  <div class="col-sm-6">
-                    <img class="d-block w-100 img-thumbnail" src="img/img-4.jpg" alt="Fourth slide">
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="carousel-caption">
-                      <div class="row">
-                        <h1>Fourth Artist</h1>
-                      </div>
-					  <div class="row">
-                        <a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a><a href="#" class="btn-default">Genre</a>
-				      </div>
-                      <div class="row">
-                        <p>biography blah blah blah</p>
-                      </div>
                     </div>
-                  </div>
-                </div>
-                </div>
+                {% endfor %}
               </div>
               <a class="carousel-control-prev" href="#featured-carousel" role="button" data-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -200,91 +156,29 @@
         <div class="row">
           <div id="latest-carousel" class="card-carousel carousel slide carousel-fade" data-interval="false" data-wrap="false" style="width: 100%; margin: 0">
             <div class="carousel-inner row w-100 mx-auto">
+            {% for group in latest %}
+            {% if forloop.first %}
               <div class="carousel-item active">
-                <div class="row">
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="http://thelimitedpress.com/wp-content/uploads/2014/05/either-or.jpg" alt="Card image 1">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="https://images-na.ssl-images-amazon.com/images/I/91VCtSQ1uwL._SL1425_.jpg" alt="Card image 2">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-3">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-cover" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {% else %}
               <div class="carousel-item">
-                <div class="row">
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-1.jpg" alt="Card image 1">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
+            {% endif %}
+              <div class="row">
+                {% for album in group %}
+                <div class="col-3">
+                  <div class="card bg-transparent">
+                    <div class="card-img-wrap">
+                      <img class="card-img-top img-cover" src="{{ album.img_path }}" alt="{{ album.title }}">
                     </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-2.jpg" alt="Card image 2">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-4">
-                    <div class="card bg-transparent">
-                      <div class="card-img-wrap">
-                        <img class="card-img-top img-responsive" src="img/img-3.jpg" alt="Card image 3">
-                      </div>
-                      <div class="card-body">
-                        <h4 class="card-title">Album Name</h4>
-                        <p class="card-text">Artist Name</p>
-                      </div>
+                    <div class="card-body">
+                      <h4 class="card-title">{{ album.title }}</h4>
+                      <p class="card-text">{{ album.artists }}</p>
                     </div>
                   </div>
                 </div>
+                {% endfor %}
               </div>
+            </div>
+            {% endfor %}
             </div>
             <a class="carousel-control-prev" href="#latest-carousel" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -374,17 +268,17 @@
     </footer>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Plugin JavaScript -->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
 
     <!-- Custom scripts for this template -->
-    <script src="js/grayscale.js"></script>
+    <script src="{% static 'js/grayscale.js' %}"></script>
 
   </body>
 

@@ -42,7 +42,10 @@ class Artist(models.Model):
   comments = GenericRelation('UserPost')
 
   def __str__(self):
-    return '{0} ({1})'.format(self.id, self.last_name)
+    if self.is_band:
+      return self.last_name
+    else:
+      return '{0}, {1}'.format(self.last_name, self.first_name)
 
   def get_absolute_url(self):
     return reverse('artist-detail-view', args=[str(self.id)])
@@ -129,7 +132,8 @@ class Album(models.Model):
   comments = GenericRelation('UserPost')
 
   class Meta:
-    get_latest_by = '-release_date'
+    get_latest_by = ['release_date']
+    ordering = ['release_date']
 
   def __str__(self):
     return self.title
@@ -269,7 +273,7 @@ class GenreVote(models.Model):
   )
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
-  genre = models.OneToOneField(
+  genre = models.ForeignKey(
     Genre,
     on_delete=models.CASCADE,
     related_name='votes',
@@ -278,6 +282,7 @@ class GenreVote(models.Model):
 
   class Meta:
     unique_together = (('user', 'content_type', 'object_id', 'genre'),)
+    index_together = (('content_type', 'object_id'),)
 
 
 # User votes for individual tags on an album/song
@@ -294,7 +299,7 @@ class TagVote(models.Model):
   )
   object_id = models.PositiveIntegerField()
   content_object = GenericForeignKey()
-  tag = models.OneToOneField(
+  tag = models.ForeignKey(
     Tag,
     on_delete=models.CASCADE,
     related_name='votes',
@@ -303,6 +308,7 @@ class TagVote(models.Model):
 
   class Meta:
     unique_together = (('user', 'content_type', 'object_id', 'tag'),)
+    index_together = (('content_type', 'object_id'),)
 
 
 # Template for a user's post or comment
