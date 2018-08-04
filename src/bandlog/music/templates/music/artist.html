@@ -10,16 +10,17 @@
 
     <title>Portfolio Item - Start Bootstrap Template</title>
 
+    {% load static %}
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
     <!-- Custom fonts for this template -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
     
     <!-- Custom styles for this template -->
-    <link href="css/grayscale.css" rel="stylesheet">
+    <link href="{% static 'css/grayscale.css' %}" rel="stylesheet">
 
   </head>
 
@@ -28,7 +29,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-shrink" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Bandlog</a>
+        <a class="navbar-brand" href="{% url 'index' %}">Bandlog</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
@@ -67,12 +68,13 @@
         </div>
       </div>
     </nav>
+		
     <!-- Page Content -->
     <section id="artist-overview" class="content-section">
       <div class="container">
         <!-- Portfolio Item Heading -->
         <div class="row">
-          <h2 class="title">{{ artist.last_name }}</h2>
+          <h2 class="title">{{ artist.first_name }} {{ artist.last_name }}</h2>
         </div>
         <!-- Portfolio Item Row -->
         <div class="row">
@@ -99,21 +101,23 @@
               {% if artist.to_date == "01/01/9999" %}
                 Present
               {% else %}
-                {{ artist.to_date %}}
+                {{ artist.to_date }}
               {% endif %}
             {% else %}
               ?
             {% endif %}
             </p>
             
-            <h5 class="my-3">Member of</h5>
-            <ul>
-            {% for memship in artist.band_memberships %}
-              <li>
-                <a href="/artist/{{ memship.band.id }}">{{ memship.band }}</a>
-              </li>
-            {% endfor %}
-            </ul>
+            {% if artist.band_memberships.all %}
+              <h5 class="my-3">Member of</h5>
+              <ul>
+              {% for memship in artist.band_memberships.all %}
+                <li>
+                  <a href="/artist/{{ memship.band.id }}">{{ memship.band }}</a>
+                </li>
+              {% endfor %}
+              </ul>
+            {% endif %}
             
             <h5 class="my-3">Average Rating</h5>
             <h6>
@@ -174,7 +178,9 @@
                 </td>
                 <td>
                   <div class="row">
-                    <h6>{{ album.title }}</h6>
+                    <h6>
+                      <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a>
+                    </h6>
                   </div>
                   <div class="row">
                     {% if album.release_date %}
@@ -204,7 +210,9 @@
                 </td>
                 <td>
                   <div class="row">
-                    <h6>{{ album.title }}</h6>
+                    <h6>
+                      <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a>
+                    </h6>
                   </div>
                   <div class="row">
                     {% if album.release_date %}
@@ -234,7 +242,9 @@
                 </td>
                 <td>
                   <div class="row">
-                    <h6>{{ album.title }}</h6>
+                    <h6>
+                      <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a>
+                    </h6>
                   </div>
                   <div class="row">
                     {% if album.release_date %}
@@ -247,11 +257,37 @@
                 <td>{{ album.avg_rating }}</td>
               </tr>
               {% endfor %}
+            {% endif %}
             </table>
           </div>
           
           <div id="credits" class="container tab-pane fade">
-            <p>hi</p>
+            {% for album in artist.credited_on.all %}
+            <tr>
+                <td class="img-td">
+                  {% if album.img_path %}
+                    <img class="img-cover img-discog mx-auto" src="{{ album.img_path }}" alt="{{ album.title }}">
+                  {% else %}
+                    <img class="img-cover img-discog mx-auto" src="{% static 'img/not-found.png' %}" alt="Image N/A">
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="row">
+                    <h6>
+                      <a href="{% url 'album_detail' album.id %}">{{ album.title }}</a>
+                    </h6>
+                  </div>
+                  <div class="row">
+                    {% if album.release_date %}
+                      {{ album.release_date }}
+                    {% else %}
+                      Unknown
+                    {% endif %}
+                  </div>
+                </td>
+                <td>{{ album.avg_rating }}</td>
+              </tr>
+            {% endfor %}
           </div>
           
           
@@ -348,9 +384,9 @@
     </footer>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="js/grayscale.js"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/grayscale.js' %}"></script>
     <script>
       $('.read-more').readMore();
     </script>

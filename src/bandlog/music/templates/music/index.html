@@ -112,9 +112,13 @@
                         <div class="carousel-caption">
                           <div class="row">
                             {% if artist.is_band %}
-                              <h1>{{ artist.last_name }}</h1>
+                              <h1>
+                                <a href="{% url 'artist_detail' artist.id %}">{{ artist.last_name }}</a>
+                              </h1>
                             {% else %}
-                              <h1>{{ artist.first_name }} {{ artist.last_name }}</h1>
+                              <h1>
+                                <a href="{% url 'artist_detail' artist.id %}">{{ artist.first_name }} {{ artist.last_name }}</a>
+                              </h1>
                             {% endif %}
                           </div>
 					                <div class="row">

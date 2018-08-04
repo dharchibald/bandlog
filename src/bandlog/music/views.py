@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django.http import Http404
 
@@ -55,10 +56,13 @@ def artist_detail(request, artist_id):
   # "score" when found in a shared genre or tag
   # Sort output by score
 
+  context = {'artist': artist, 'long_plays': long_plays,
+             'extend_plays': extend_plays, 'singles': singles}
+
   if artist.is_band:
-    return render(request, 'music/band.html', {'artist': artist})
+    return render(request, 'music/band.html', context)
   else:
-    return render(request, 'music/artist.html', {'artist': artist})
+    return render(request, 'music/artist.html', context)
 
 
 def album_detail(request, album_id):

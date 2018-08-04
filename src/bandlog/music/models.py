@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.fields import GenericRelation
@@ -48,7 +49,7 @@ class Artist(models.Model):
       return '{0}, {1}'.format(self.last_name, self.first_name)
 
   def get_absolute_url(self):
-    return reverse('artist-detail-view', args=[str(self.id)])
+    return reverse('artist_detail', args=[str(self.id)])
 
 
 # Link between band members and the band.
@@ -83,7 +84,7 @@ class Genre(models.Model):
     return self.title
 
   def get_absolute_url(self):
-    return reverse('genre-detail', args=[str(self.id)])
+    return reverse('genre_detail', args=[str(self.id)])
 
 
 # Template for user-generated descriptors of albums/songs
@@ -95,7 +96,7 @@ class Tag(models.Model):
     return self.title
 
   def get_absolute_url(self):
-    return reverse('tag-detail', args=[str(self.id)])
+    return reverse('tag_detail', args=[str(self.id)])
 
 
 # Template for an album release from an artist.
@@ -139,7 +140,7 @@ class Album(models.Model):
     return self.title
 
   def get_absolute_url(self):
-    return reverse('album-detail', args=[str(self.id)])
+    return reverse('album_detail', args=[str(self.id)])
 
   @property
   def calculate_rating(self):
@@ -174,9 +175,13 @@ class Song(models.Model):
 
   class Meta:
     unique_together = ('album', 'disc_num', 'track_num',)
+    ordering = ['album', 'disc_num', 'track_num']
 
   def __str__(self):
     return self.title
+
+  def get_absolute_url(self):
+    return reverse('song_detail', args=[str(self.id)])
 
   def calculate_rating(self):
     return UserRating.objects.filter(content_object=self).aggregate(Avg('rating'))
