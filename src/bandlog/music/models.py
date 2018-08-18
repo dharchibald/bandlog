@@ -21,7 +21,7 @@ class Artist(models.Model):
     related_name='bands',
   )
   related = models.ManyToManyField(
-    'self', 
+    'self',
     blank=True
   )
   from_date = models.DateField(blank=True)

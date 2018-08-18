@@ -50,16 +50,12 @@ a {
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
-  color: #f06449;
+  color: #fff;
 }
 
 a:focus, a:hover {
   text-decoration: none;
   color: #e63946;
-}
-
-h2 > a {
-  color: #fff;
 }
 
 table, th, td {

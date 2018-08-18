@@ -6,4 +6,5 @@ urlpatterns = [
   path('artist/<int:artist_id>/', views.artist_detail, name='artist_detail'),
   path('release/album/<int:album_id>/', views.album_detail, name='album_detail'),
   path('release/track/<int:song_id>/', views.song_detail, name='song_detail'),
+  path('search', views.search, name='search'),
 ]
