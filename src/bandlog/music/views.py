@@ -4,7 +4,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 
-from .library import group
+from .library import group, pagebreak
 from .models import *
 
 
@@ -157,22 +157,18 @@ def song_detail(request, song_id):
 def search(request):
 
   template = 'music/search_form.html'
-  #query = request.GET.get('q')
-  #artists = Artist.objects.filter(first_name__icontains=query | last_name__icontains=query)
-  #albums = Albums.objects.filter(title__icontains=query)
-  #songs = Albums.objects.filter(title__icontains=query)
-  #object_list = list(chain(artists, albums, songs))
+  query = request.GET.get('q')
+  # Break query up into substrings?
 
-  #paginator = Paginator(object_list, 1)
-  #page = request.GET.get('page')
+  artists = Artist.objects.filter(Q(name__icontains=query))
+  albums = Albums.objects.filter(Q(title__icontains=query))
+  songs = Albums.objects.filter(Q(title__icontains=query))
+  object_list = list(chain(artists, albums, songs))
 
-  #try:
-    #items = paginator.page(page)
-  #except PageNotAnInteger:
-    #items = paginator.page(1)
-  #except EmptyPage:
-    #items = paginator.page(paginator.num_pages)
+  pages = pagebreak(request, object_list, 10)
 
-  context = {}
+  context = {'items': pages[0],
+             'page_range': pages[1],
+             'query': query}
 
   return render(request, template, context)

@@ -7,7 +7,7 @@
       <div class="container">
         <!-- Portfolio Item Heading -->
         <div class="row">
-          <h2 class="title">{{ artist.first_name }} {{ artist.last_name }}</h2>
+          <h2 class="title">{{ artist.name }}</h2>
         </div>
         <!-- Portfolio Item Row -->
         <div class="row">
@@ -15,7 +15,7 @@
           <div class="col-md-6">
             <div class="container">
               {% if artist.img_path %}
-                <img class="img-thumbnail img-fluid center" src="{{ artist.img_path }}" alt="{{ artist.last_name }}">
+                <img class="img-thumbnail img-fluid center" src="{{ artist.img_path }}" alt="{{ artist.name }}">
               {% else %}
                 <img class="img-thumbnail img-fluid center" src="{% static 'img/not-found.png' %}" alt="Image N/A">
               {% endif %}

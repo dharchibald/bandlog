@@ -10,8 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 
 # Template for a music artist.
 class Artist(models.Model):
-  last_name = models.CharField(max_length=127, db_index=True)
-  first_name = models.CharField(max_length=31, blank=True)
+  name = models.CharField(max_length=255, db_index=True)
   is_band = models.BooleanField()
   members = models.ManyToManyField(
     'self',
@@ -43,10 +42,7 @@ class Artist(models.Model):
   comments = GenericRelation('UserPost')
 
   def __str__(self):
-    if self.is_band:
-      return self.last_name
-    else:
-      return '{0}, {1}'.format(self.last_name, self.first_name)
+    return self.name
 
   def get_absolute_url(self):
     return reverse('artist_detail', args=[str(self.id)])
