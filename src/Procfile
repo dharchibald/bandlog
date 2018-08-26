@@ -1,0 +1,1 @@
+web: gunicorn bandlog.wsgi --log-file -
