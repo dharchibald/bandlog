@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import django_heroku
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,6 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+
+# Dedicated database URL
+DATABASE_URL = 'mysql://b2e47d62273f6f:75edca91@us-cdbr-iron-east-01.cleardb.net/heroku_2fb6e488d320fc7?reconnect=true'
 
 # Application definition
 
@@ -77,14 +80,16 @@ WSGI_APPLICATION = 'bandlog.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test',
-	'USER': 'user',
-	'PASSWORD': 'anonymous',
-	'HOST': 'localhost',
-	'PORT': '',
+DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
+
+#DATABASES = {
+#    'default': {
+#       'ENGINE': 'django.db.backends.mysql',
+#       'NAME': 'test',
+#	'USER': 'user',
+#	'PASSWORD': 'anonymous',
+#	'HOST': 'localhost',
+#	'PORT': '',
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
@@ -131,5 +136,3 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Activate Django-Heroku
-django_heroku.settings(locals())
