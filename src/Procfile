@@ -1,1 +1,1 @@
-web: gunicorn bandlog/bandlog.wsgi:application --log-file -
+web: gunicorn bandlog.wsgi:application --log-file -
