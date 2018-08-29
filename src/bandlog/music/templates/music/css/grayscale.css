@@ -58,6 +58,10 @@ a:focus, a:hover {
   color: #e63946;
 }
 
+h2 > a {
+  color: #fff;
+}
+
 table, th, td {
   table-layout: auto;
   padding: 5px 10px;
@@ -90,9 +94,22 @@ tr:hover {
   background: #202020 !important;
 }
 
-.discog-tbl .img-td {
-  max-width: 30px;
+.item-tbl {
+  width: 100%
+  table-layout: fixed; 
+}
+
+.item-tbl, .img-td {
+  width: 20%;
   padding: 20px;
+}
+
+.item-tbl, .title-td {
+  width: 60%;
+}
+
+.item-tbl, .rating-td {
+  width: 20%; 
 }
 
 .container img {

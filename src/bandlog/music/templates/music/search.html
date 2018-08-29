@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+	
+	{% load static %}
+  {% block content %}
+
+    <!-- Page content -->
+    <div class="title">
+      <div class="container">
+        <h2>Search results for 'query'</h2>
+        <p>1-21 entries out of 206</p>
+        </div>
+    </div>
+
+    <div class="content-section">
+      <div class="container">
+        <table class="item-tbl" style="width: 100%;">
+          <th colspan="3">
+            Artists
+          </th>
+          <tr>
+            <td class="img-td">
+              <img class="img-cover img-discog img-artist mx-auto" src="img/flips.jpg" alt="Flaming Lips">
+            </td>
+            <td class="title-td">
+              <div class="row">
+                <h6>
+                  <a href="#">The Flaming Lips</a>
+			          </h6>
+              </div>
+              <div class="row">
+			          United States of America
+              </div>
+            </td>
+            <td class="rating-td">3000</td>
+          </tr>
+		    <tr>
+		
+		  <th colspan="3">
+            Albums
+          </th>
+          <tr>
+            <td class="img-td">
+              <img class="img-cover img-discog mx-auto" src="img/img-1.jpg" alt="Album">
+            </td>
+            <td class="title-td">
+              <div class="row">
+               <h6>
+                 <a href="#">Album</a>
+			   </h6>
+              </div>
+              <div class="row">
+			    The Flaming Lips
+              </div>
+            </td>
+            <td class="rating-td">3000</td>
+			  
+		</table>
+		<h5><img src="img/plus-icon.png"> Add an artist</h5>
+		  
+	  </div>
+	</div>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Copyright &copy; Douglas Archibald</p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/popper/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/grayscale.js"></script>
+    <script>
+      $('.read-more').readMore();
+    </script>
+	
+	</body>
+	
+</html>
