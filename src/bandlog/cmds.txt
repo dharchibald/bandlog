@@ -1,1 +1,2 @@
-git push heroku 'git subtree split --prefix src/bandlog master':master --force
+git push heroku `git subtree split --prefix src/bandlog master`:master --force
+

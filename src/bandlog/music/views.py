@@ -7,6 +7,7 @@ from django.db.models import Q
 
 from .library import group, pagebreak
 from .models import *
+from .forms import *
 
 
 # Create your views here.
