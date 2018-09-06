@@ -83,8 +83,8 @@ def artist_create(request):
       form.save_m2m()
       return redirect('artist_detail', pk=new_artist.pk)
 
-    else:
-      form = ArtistForm()
+  else:
+    form = ArtistForm()
 
   context = {'form': form}
 
