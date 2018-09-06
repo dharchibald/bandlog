@@ -11,7 +11,7 @@ def group(list, n):
 # each with n pages
 def pagebreak(request, data, n):
 
-  paginator = Paginator(object_list, 1)
+  paginator = Paginator(data, 1)
   page = request.GET.get('page')
   items = paginator.get_page(page)
 

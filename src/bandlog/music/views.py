@@ -3,6 +3,7 @@ import random
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
+from django.db.models import Q
 
 from .library import group, pagebreak
 from .models import *
@@ -156,16 +157,18 @@ def song_detail(request, song_id):
 
 def search(request):
 
-  template = 'music/search_form.html'
+  template = 'music/search.html'
   query = request.GET.get('q')
   # Break query up into substrings?
 
   artists = Artist.objects.filter(Q(name__icontains=query))
-  albums = Albums.objects.filter(Q(title__icontains=query))
-  songs = Albums.objects.filter(Q(title__icontains=query))
-  object_list = list(chain(artists, albums, songs))
+  #albums = Albums.objects.filter(Q(title__icontains=query))
+  #songs = Albums.objects.filter(Q(title__icontains=query))
+  #object_list = list(chain(artists, albums, songs))
 
-  pages = pagebreak(request, object_list, 10)
+  #pages = pagebreak(request, object_list, 10)
+
+  pages = pagebreak(request, artists, 10)
 
   context = {'items': pages[0],
              'page_range': pages[1],
