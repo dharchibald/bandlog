@@ -3,3 +3,5 @@ local_settings.py
 
 # Do not upload local migrations of database
 0001_initial.py
+
+node_modules/
